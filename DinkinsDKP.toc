@@ -1,0 +1,5 @@
+## Interface: 100100
+## Title: DinkinsDKP
+## Author: Dinkins-Mal'Ganis
+## Version: 1.0
+DinkinsDKP.lua
