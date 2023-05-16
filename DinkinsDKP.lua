@@ -101,7 +101,7 @@ local function OnEvent(self, event, ...)
             local groupSize = GetNumGroupMembers()
             local raidMembers = {}
 
-            if groupSize > 0 then    
+            if groupSize > 0 then
                 -- Get all the raid member names
                 for i = 1, groupSize do
                     local name, _, _, _, _, _, _, online = GetRaidRosterInfo(i)
@@ -120,8 +120,8 @@ local function OnEvent(self, event, ...)
     -- Code for setting DKP
     if target and amount then
         command = strtrim(command)
-        amount = tonumber(amount)        
-    
+        amount = tonumber(amount)
+
         if target ~= "" and amount then
             dkpTable[target] = amount
             SendChatMessageToChannel("Your Dinkins Kindness Points (DKP) has been set to " .. amount, target)
@@ -159,19 +159,52 @@ local function OnEvent(self, event, ...)
                 SendChatMessageToChannel("DKP minus " .. amount .. ". You now have " .. dkpTable[target] .. " Dinkins Kindness Points.", target)
             end
         end
-    end
-    elseif command == "dkp" then
-    -- Code for checking DKP
-        if target then
-            command = strtrim(command)
-
-            if target ~= "" then
-                if dkpTable[target] == nil then
-                    dkpTable[target] = 0
-                end
-                SendChatMessageToChannel("Your current Dinkins Kindness Points (DKP): " .. dkpTable[target], target)
+    elseif command == "list" then
+        -- Sort the table
+        local sortedTable = SortDKPTable()
+        -- Code for listing DKP
+        if strtrim(target) == "raid" then
+            SendChatMessage("Dinkins Kindness Points (DKP) List:", "RAID", nil, "")
+            for i, entry in ipairs(sortedTable) do
+                local playerName = entry.name
+                local playerDKP = entry.dkp
+    
+                C_Timer.After(i, function()
+                    SendChatMessage(playerName .. ": " .. playerDKP, "RAID", nil, "")
+                end)
             end
+        elseif strtrim(target) == "guild" then
+            SendChatMessage("Dinkins Kindness Points (DKP) List:", "GUILD", nil, "")
+            for i, entry in ipairs(sortedTable) do
+                local playerName = entry.name
+                local playerDKP = entry.dkp
+    
+                C_Timer.After(i, function()
+                    SendChatMessage(playerName .. ": " .. playerDKP, "guild", nil, "")
+                end)
+            end
+        elseif strtrim(target) ~= nil then
+            SendChatMessage("Dinkins Kindness Points (DKP) List:", "WHISPER", nil, target)
+            for i, entry in ipairs(sortedTable) do
+                local playerName = entry.name
+                local playerDKP = entry.dkp
+    
+                C_Timer.After(i, function()
+                    SendChatMessage(playerName .. ": " .. playerDKP, "WHISPER", nil, target)
+                end)
+            end
+        else
+            SendChatMessageToChannel("Dinkins Kindness Points (DKP) List:", nil)
+            for i, entry in ipairs(sortedTable) do
+                local playerName = entry.name
+                local playerDKP = entry.dkp
+    
+                C_Timer.After(i, function()
+                    print(playerName .. ": " .. playerDKP)
+                end)            
         end
+                -- Delayed printing of each player's DKP with message throttling
+
     end
 end
 SLASH_DINKINSDKP1 = "/dkp"
@@ -186,4 +219,3 @@ frame:SetScript("OnEvent", function(self, event, ...)
 end)
 
 frame:SetScript("OnEvent", OnEvent)
-end
