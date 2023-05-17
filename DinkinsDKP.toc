@@ -3,3 +3,5 @@
 ## Author: Dinkins-Mal'Ganis
 ## Version: 1.0
 DinkinsDKP.lua
+Commands.lua
+Utilities.lua
