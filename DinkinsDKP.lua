@@ -27,10 +27,4 @@ SLASH_DINKINSDKP2 = "/dinkinsdkp"
 
 print("Dinkins Kindness Points addon loaded.")
 
-frame:SetScript("OnEvent", function(self, event, ...)
-    if event == "PLAYER_LOGOUT" or event == "PLAYER_LEAVING_WORLD" then
-        table.SaveData()
-    end
-end)
-
-frame:SetScript("OnEvent", events.OnEvent)
+DinkinsDKP:SetScript("OnEvent", events.OnEvent)
