@@ -53,7 +53,9 @@ end
 local function OnEvent(self, event, ...)
     local arg1, arg2, arg3 = ...
 
-    if event == "CHAT_MSG_WHISPER" then
+    if event == "PLAYER_LOGOUT" theb
+        SaveData()
+    elsif event == "CHAT_MSG_WHISPER" then
         local message = string.lower(arg1)
         local sender = arg2
 
