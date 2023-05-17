@@ -39,7 +39,7 @@ end
 
 local function handleAddonLoaded(self, event, ...)
     local player = UnitName("player")
-    if player ~= "Dinkins" then
+    if player ~= "Dinkins" or player ~= "Theban" then
         print(
             "Imposter detected! You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
         SendChatMessage(
