@@ -1,17 +1,18 @@
 -- Table.lua
-local table = {}
+DinkinsDKPDB = DinkinsDKPDB or {}
+local table = DinkinsDKPDB.dkpTable or {}
 
 function table.initialize()
     -- Define DKP storage table
-    table.dkpTable = {}
+    DinkinsDKPDB.dkpTable = {}
 
     -- Add Global variable to store the add-on's namespace
-    table.DinkinsDKP = {}
+    DinkinsDKPDB.DinkinsDKP = {}
 end
 
 -- Function to save the 'dkpTable' data
 function table.SaveData(dkpTable)
-    table.dkpTable = dkpTable
+    DinkinsDKPDB.dkpTable = dkpTable
 end
 
-return table
+return DinkinsDKPDB
