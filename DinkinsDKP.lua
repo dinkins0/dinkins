@@ -13,9 +13,9 @@ function DinkinsDKP:ADDON_LOADED(event, addon)
     if addon == "DinkinsDKP" then
         commands.register()
 
-        events.initalize()
         network.initalize()
         table.initialize()
+        events.initalize(network, table)
         util.initialize()
 
         self:UnregisterEvent("ADDON_LOADED")
