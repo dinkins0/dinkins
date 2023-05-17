@@ -9,7 +9,10 @@ end
 function util.SortDKPTable(dkpTable)
     local sortedTable = {}
     for playerName, dkp in pairs(dkpTable) do
-        table.insert(sortedTable, {name = playerName, dkp = dkp})
+        table.insert(sortedTable, {
+            name = playerName,
+            dkp = dkp
+        })
     end
 
     table.sort(sortedTable, function(a, b)

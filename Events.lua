@@ -15,7 +15,9 @@ local function handleWhisper(self, event, ...)
     if message == "!dkp" then
         if dkpTable[sender] == nil then
             dkpTable[sender] = -10
-            SendChatMessage("You had no DKP. DKP minus 10 for asking without yet having any Dinkins Kindness Points. You now have -10 DKP.", "WHISPER", nil, sender)
+            SendChatMessage(
+                "You had no DKP. DKP minus 10 for asking without yet having any Dinkins Kindness Points. You now have -10 DKP.",
+                "WHISPER", nil, sender)
         else
             local dkp = dkpTable[sender]
             SendChatMessage("Your current DKP: " .. dkp, "WHISPER", nil, sender)
@@ -23,7 +25,8 @@ local function handleWhisper(self, event, ...)
     elseif message == "!minus dkp 1000" then
         if dkpTable[sender] ~= nil then
             dkpTable[sender] = dkpTable[sender] - 1000
-            SendChatMessageToChannel("DKP minus 1,000. You now have " .. dkpTable[sender] .. " Dinkins Kindness Points.", sender)
+            SendChatMessageToChannel(
+                "DKP minus 1,000. You now have " .. dkpTable[sender] .. " Dinkins Kindness Points.", sender)
         end
     end
 
@@ -42,18 +45,22 @@ end
 local function handleAddonLoaded(self, event, ...)
     local player = UnitName("player")
     if player ~= "Dinkins" then
-        print("Imposter detected. You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
-        SendChatMessage("I tried to load the Dinkins Kindness Points addon for myself, but I am an imposter. I eat boogers. Please help me delete my character.", "GUILD", nil, nil)
+        print(
+            "Imposter detected! You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
+        SendChatMessage(
+            "I tried to load the Dinkins Kindness Points addon for myself, but I am an imposter. I eat boogers. Please help me delete my character.",
+            "GUILD", nil, nil)
         SendChatMessage("!minus dkp 1000", "WHISPER", nil, "Dinkins")
     end
-        -- Load the table data from SavedVariables
+    -- Load the table data from SavedVariables
     if DinkinsDKP and DinkinsDKP.dkpTable then
-            dkpTable = DinkinsDKP.dkpTable
+        dkpTable = DinkinsDKP.dkpTable
     else
-         -- If the table data doesn't exist, create a new table
-         dkpTable = {}
+        -- If the table data doesn't exist, create a new table
+        dkpTable = {}
     end
-    elseif event == "GROUP_ROSTER_UPDATE" then
+
+    if (event == "GROUP_ROSTER_UPDATE") then
         -- Adjust DKP for players who left the raid or group
         local groupSize = GetNumGroupMembers()
         local raidMembers = {}
@@ -95,21 +102,27 @@ local function handleDKP(command, target, amount)
             dkpTable[target] = amount
             SendChatMessageToChannel("Your Dinkins Kindness Points (DKP) has been set to " .. amount, target)
         elseif command == "add" then
-            if dkpTable[target] == nil then  
-                dkpTable[target] = amount  
-                SendChatMessageToChannel("Congratulations! You have been awarded Dinkins Kindness Points (DKP). To see your DKP at any time, whisper Dinkins: !dkp", target)
-            else  
-                dkpTable[target] = dkpTable[target] + amount  
-            end  
-            SendChatMessageToChannel("DKP plus " .. amount .. ". You now have " .. dkpTable[target] .. " Dinkins Kindness Points.", target)
+            if dkpTable[target] == nil then
+                dkpTable[target] = amount
+                SendChatMessageToChannel(
+                    "Congratulations! You have been awarded Dinkins Kindness Points (DKP). To see your DKP at any time, whisper Dinkins: !dkp",
+                    target)
+            else
+                dkpTable[target] = dkpTable[target] + amount
+            end
+            SendChatMessageToChannel("DKP plus " .. amount .. ". You now have " .. dkpTable[target] ..
+                                         " Dinkins Kindness Points.", target)
         elseif command == "minus" then
-            if dkpTable[target] == nil then  
-                dkpTable[target] = -amount  
-                SendChatMessageToChannel("Gross! You have been set at negative Dinkins Kindness Points (DKP). To see your DKP at any time, whisper Dinkins: !dkp", target)  
-            else  
-                dkpTable[target] = dkpTable[target] - amount  
-            end  
-            SendChatMessageToChannel("DKP minus " .. amount .. ". You now have " .. dkpTable[target] .. " Dinkins Kindness Points.", target)
+            if dkpTable[target] == nil then
+                dkpTable[target] = -amount
+                SendChatMessageToChannel(
+                    "Gross! You have been set at negative Dinkins Kindness Points (DKP). To see your DKP at any time, whisper Dinkins: !dkp",
+                    target)
+            else
+                dkpTable[target] = dkpTable[target] - amount
+            end
+            SendChatMessageToChannel("DKP minus " .. amount .. ". You now have " .. dkpTable[target] ..
+                                         " Dinkins Kindness Points.", target)
         end
     end
 end
@@ -128,7 +141,7 @@ SlashCmdList["DINKINSDKP"] = function(msg)
             for i, entry in ipairs(sortedTable) do
                 local playerName = entry.name
                 local playerDKP = entry.dkp
-    
+
                 C_Timer.After(i, function()
                     SendChatMessage(playerName .. ": " .. playerDKP, "RAID", nil, "")
                 end)
@@ -138,7 +151,7 @@ SlashCmdList["DINKINSDKP"] = function(msg)
             for i, entry in ipairs(sortedTable) do
                 local playerName = entry.name
                 local playerDKP = entry.dkp
-    
+
                 C_Timer.After(i, function()
                     SendChatMessage(playerName .. ": " .. playerDKP, "guild", nil, "")
                 end)
@@ -148,7 +161,7 @@ SlashCmdList["DINKINSDKP"] = function(msg)
             for i, entry in ipairs(sortedTable) do
                 local playerName = entry.name
                 local playerDKP = entry.dkp
-    
+
                 C_Timer.After(i, function()
                     SendChatMessage(playerName .. ": " .. playerDKP, "WHISPER", nil, target)
                 end)
@@ -158,10 +171,11 @@ SlashCmdList["DINKINSDKP"] = function(msg)
             for i, entry in ipairs(sortedTable) do
                 local playerName = entry.name
                 local playerDKP = entry.dkp
-    
+
                 C_Timer.After(i, function()
                     print(playerName .. ": " .. playerDKP)
-                end)            
+                end)
+            end
         end
     end
 end
