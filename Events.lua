@@ -46,7 +46,7 @@ local function handleAddonLoaded(self, event, ...)
     local player = UnitName("player")
     if player ~= "Dinkins" then
         print(
-            "Imposter detected. You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
+            "Imposter detected! You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
         SendChatMessage(
             "I tried to load the Dinkins Kindness Points addon for myself, but I am an imposter. I eat boogers. Please help me delete my character.",
             "GUILD", nil, nil)
