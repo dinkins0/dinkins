@@ -7,7 +7,7 @@ frame:RegisterEvent("PLAYER_LOGOUT")
 frame:RegisterEvent("PLAYER_LEAVING_WORLD")
 
 -- Define DKP storage table
-local dkpTable = {}
+dkpTable = {}
 
 -- Add Global variable to store the add-on's namespace
 DinkinsDKP = {}
