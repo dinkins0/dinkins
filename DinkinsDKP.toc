@@ -4,4 +4,7 @@
 ## Version: 1.0
 DinkinsDKP.lua
 Commands.lua
+Events.lua
+Network.lua
+Table.lua
 Utilities.lua
