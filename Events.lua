@@ -78,12 +78,6 @@ local function handleAddonLoaded(self, event, ...)
 end
 
 function events.OnEvent(self, event, ...)
-    -- Guard check on exit
-    if event == "PLAYER_LOGOUT" then
-        SaveData()
-        return
-    end
-
     if event == "CHAT_MSG_WHISPER" then
         handleWhisper(self, event, ...)
     elseif event == "ADDON_LOADED" and arg1 == "DinkinsDKP" then
