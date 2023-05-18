@@ -11,6 +11,31 @@ function events.initialize(network, table)
     dkpTable = table
 end
 
+-- Dock DKP if someone outrolls Dinkins for Loot
+-- Register for the LOOT_ROLLS_COMPLETE event
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("LOOT_ROLLS_COMPLETE")
+
+-- Event handler for LOOT_ROLLS_COMPLETE event
+frame:SetScript("OnEvent", function(_, event, ...)
+  if event == "LOOT_ROLLS_COMPLETE" then
+    local numItems = select("#", ...)
+    
+    -- Loop through all the loot items
+    for i = 1, numItems do
+      local _, _, _, _, rollType, rollID = GetLootRollItemInfo(i)
+      local winner, _, _, _, _ = GetLootRollItemInfo(i, rollID)
+      
+      -- Check if the user rolled but lost (assuming your character's name is "YourCharacter")
+                -- Need another AND statement for checking if Dinkins is the user running running addon only; should not occur if 2 people have addon 
+      if rollType == 0 and winner ~= "Dinkins" then
+            events.handleDKP(minus, winner, 100)
+      end
+    end
+  end
+end)
+
+
 local function handleWhisper(self, event, ...)
     local message = string.lower(arg1)
     local sender = arg2
@@ -64,6 +89,7 @@ local function handleAddonLoaded(self, event, ...)
         end
     end
 
+     
     -- Register slash command handler
     SlashCmdList["DINKINSDKP"] = function(msg)
         local command, target, amount = strsplit(" ", msg)
