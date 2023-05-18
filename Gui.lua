@@ -1,7 +1,7 @@
 -- Create the addon frame
 Gui = {}
 
-local addonFrame = CreateFrame("Frame", "DinkinsDKPAddonFrame", UIParent)
+local addonFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 addonFrame:SetSize(300, 400)
 addonFrame:SetPoint("CENTER")
 addonFrame:SetBackdrop({
@@ -10,7 +10,12 @@ addonFrame:SetBackdrop({
     tile = true,
     tileSize = 16,
     edgeSize = 16,
-    insets = { left = 4, right = 4, top = 4, bottom = 4 },
+    insets = {
+        left = 4,
+        right = 4,
+        top = 4,
+        bottom = 4
+    }
 })
 addonFrame:SetBackdropColor(0, 0, 0, 0.8)
 addonFrame:SetMovable(true)
@@ -54,49 +59,92 @@ scrollFrame:SetPoint("TOP", image, "BOTTOM", 0, -16)
 -- Create the leaderboard content
 local leaderboard = CreateFrame("Frame", "DinkinsDKPLeaderboard", scrollFrame)
 leaderboard:SetSize(250, 300)
+leaderboard:RegisterEvent("ADDON_LOADED")
+
+-- Show the GUI
+function Gui.ShowGUI()
+    -- Populate the leaderboard with data from the dkpTable
+    local yOffset = 0
+    local rowHeight = 20
+
+    if Table.DinkinsDKPDB ~= nil then
+        for playerName, dkp in pairs(Table.DinkinsDKPDB) do
+            local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+            nameText:SetPoint("TOPLEFT", 8, -yOffset)
+            nameText:SetText(playerName)
+
+            local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+            dkpText:SetPoint("TOPRIGHT", -8, -yOffset)
+            dkpText:SetText(dkp)
+
+            yOffset = yOffset + rowHeight
+        end
+
+        scrollFrame:SetScrollChild(leaderboard)
+    end
+
+    addonFrame:Show()
+    PlaySoundOnShow()
+end
+
+-- Initialize local table with either WoW Saved Variable or default
+local function eventHandler(self, event, ...)
+    if event == "ADDON_LOADED" and ... == "DinkinsDKP" then
+        -- Populate the leaderboard with data from the dkpTable
+        local yOffset = 0
+        local rowHeight = 20
+
+        if Table.DinkinsDKPDB ~= nil then
+            for playerName, dkp in pairs(Table.DinkinsDKPDB) do
+                local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                nameText:SetPoint("TOPLEFT", 8, -yOffset)
+                nameText:SetText(playerName)
+
+                local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                dkpText:SetPoint("TOPRIGHT", -8, -yOffset)
+                dkpText:SetText(dkp)
+
+                yOffset = yOffset + rowHeight
+            end
+
+            scrollFrame:SetScrollChild(leaderboard)
+        end
+
+        leaderboard:UnregisterEvent("ADDON_LOADED")
+    end
+end
+
+leaderboard:SetScript("OnEvent", eventHandler)
 
 -- Animation variables
 local animationTimer = 0
 local animationSpeed = 2
 local animationOffset = 5
 
--- Populate the leaderboard with data from the dkpTable
-local dkpTable = {
-    { name = "Dinkins", dkp = 300, nameText = nil },
-    { name = "Theban", dkp = 200, nameText = nil },
-    { name = "Pneucrusader", dkp = 150, nameText = nil },
-    -- !!!! This can be removed and referenced with the actual DKP table once this is all strung up !!!
-}
-
-local yOffset = 0
-local rowHeight = 20
-for i, data in ipairs(dkpTable) do
-    local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    nameText:SetPoint("TOPLEFT", 8, -yOffset)
-    nameText:SetText(data.name)
-    data.nameText = nameText  -- Store the nameText in the data table
-
-    local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    dkpText:SetPoint("TOPRIGHT", -8, -yOffset)
-    dkpText:SetText(data.dkp)
-
-    yOffset = yOffset + rowHeight
-end
-
-scrollFrame:SetScrollChild(leaderboard)
-
 -- Start the animation
 local originalY = {}
 local function StartAnimation()
-    for i, data in ipairs(dkpTable) do
-        originalY[i] = data.nameText:GetPoint(2)
-    end
-
     addonFrame:SetScript("OnUpdate", function(self, elapsed)
         animationTimer = animationTimer + elapsed
-        for i, data in ipairs(dkpTable) do
-            local yOffset = originalY[i] + math.sin(animationTimer * animationSpeed) * animationOffset
-            data.nameText:SetPoint("TOPLEFT", 8, -yOffset)
+        --        for i, data in ipairs(dkpTable) do
+        --            local yOffset = originalY[i] + math.sin(animationTimer * animationSpeed) * animationOffset
+        --            data.nameText:SetPoint("TOPLEFT", 8, -yOffset)
+        --        end
+
+        if Table.DinkinsDKPDB ~= nil then
+            for playerName, dkp in pairs(Table.DinkinsDKPDB) do
+                local yOffset = math.sin(animationTimer * animationSpeed) * animationOffset
+
+                local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                nameText:SetPoint("TOPLEFT", 8 + yOffset, -yOffset)
+
+                local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                dkpText:SetPoint("TOPRIGHT", -8 + yOffset, -yOffset)
+
+                yOffset = yOffset + 20
+            end
+
+            scrollFrame:SetScrollChild(leaderboard)
         end
     end)
 end
