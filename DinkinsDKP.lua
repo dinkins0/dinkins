@@ -22,7 +22,7 @@ SlashCmdList["DINKINSDKP"] = function(msg)
     if command == "set" or command == "add" or command == "minus" then
         Events.handleDKP(command, target, amount)
     elseif command == "" or command == nil then
-        gui.ShowGUI()
+        Gui.ShowGUI()
     elseif command == "list" then
         -- Sort the table
         local sortedTable = Table.SortDKPTable()
