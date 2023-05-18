@@ -1,12 +1,12 @@
 -- Network.lua
-local network = {}
+Network = {}
 
-function network.initialize()
+function Network.initialize()
 
 end
 
 -- Function to send chat messages to the appropriate channel
-function network.SendChatMessageToChannel(message, target)
+function Network.SendChatMessageToChannel(message, target)
     if target ~= nil then
         if target == "raid" then
             SendChatMessage(message, "RAID", nil, nil)
@@ -19,5 +19,3 @@ function network.SendChatMessageToChannel(message, target)
         print(message) -- Output the message to the default chat frame if no target is specified
     end
 end
-
-return network
