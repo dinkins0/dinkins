@@ -4,6 +4,7 @@
 ## Version: 1.0
 ## SavedVariables: DinkinsDKPDB
 DinkinsDKP.lua
+Gui.lua
 Commands.lua
 Network.lua
 Table.lua
