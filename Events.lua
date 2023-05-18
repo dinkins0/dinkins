@@ -1,15 +1,14 @@
 -- Events.lua
 Events = {}
 
-local dkpTable = {}
-local chatNetwork = {}
+local dkpTable = Table
+local chatNetwork = Network
 
 -- Required Libraries
 local C_Timer = C_Timer
 
-function Events.initialize(network, table)
-    chatNetwork = network
-    dkpTable = table
+function Events.initialize()
+
 end
 
 local function handleWhisper(self, event, ...)

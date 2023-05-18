@@ -9,7 +9,7 @@ function DinkinsDKP:ADDON_LOADED(event, addon)
 
         Network.initalize()
         Table.initialize()
-        Events.initalize(network, table)
+        Events.initalize()
         Utilities.initialize()
 
         DinkinsDKP:UnregisterEvent("ADDON_LOADED")
@@ -74,4 +74,4 @@ end
 
 print("Dinkins Kindness Points addon loaded.")
 
-DinkinsDKP:SetScript("OnEvent", events.OnEvent)
+DinkinsDKP:SetScript("OnEvent", Events.OnEvent)
