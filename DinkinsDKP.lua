@@ -2,21 +2,21 @@
 local DinkinsDKP = CreateFrame("FRAME", "DinkinsDKPFrame")
 DinkinsDKP:RegisterEvent("ADDON_LOADED")
 
-local commands = require("Commands")
-local events = require("Events")
-local network = require("Network")
-local table = require("Table")
-local util = require("Utilities")
+local Commands = Commands
+local Network = Network
+local Table = Table
+local Events = Events
+local Utilities = Utilities
 
 -- Use the functions from the required files
 function DinkinsDKP:ADDON_LOADED(event, addon)
     if addon == "DinkinsDKP" then
-        commands.register()
+        Commands.register()
 
-        network.initalize()
-        table.initialize()
-        events.initalize(network, table)
-        util.initialize()
+        Network.initalize()
+        Table.initialize()
+        Events.initalize()
+        Utilities.initialize()
 
         self:UnregisterEvent("ADDON_LOADED")
     end
@@ -29,10 +29,10 @@ SLASH_DINKINSDKP2 = "/dinkinsdkp"
 SlashCmdList["DINKINSDKP"] = function(msg)
     local command, target, amount = strsplit(" ", msg)
     if command == "set" or command == "add" or command == "minus" then
-        events.handleDKP(command, target, amount)
+        Events.handleDKP(command, target, amount)
     elseif command == "list" then
         -- Sort the table
-        local sortedTable = table.SortDKPTable()
+        local sortedTable = Table.SortDKPTable()
         -- Code for listing DKP
         if strtrim(target) == "raid" then
             SendChatMessage("Dinkins Kindness Points (DKP) List:", "RAID", nil, "")
@@ -80,4 +80,4 @@ end
 
 print("Dinkins Kindness Points addon loaded.")
 
-DinkinsDKP:SetScript("OnEvent", events.OnEvent)
+DinkinsDKP:SetScript("OnEvent", Events.OnEvent)
