@@ -14,6 +14,21 @@ addonFrame:SetScript("OnDragStart", addonFrame.StartMoving)
 addonFrame:SetScript("OnDragStop", addonFrame.StopMovingOrSizing)
 addonFrame:Hide()
 
+-- Path to MP3 file
+local soundFilePath = "Interface\\Addons\\DinkinsDKP\\questing.mp3"
+
+-- Function to play the sound
+local function PlaySoundOnShow()
+    PlaySoundFile(soundFilePath, "Master")
+end
+
+-- Show the GUI
+local function ShowGUI()
+    addonFrame:Show()
+    PlaySoundOnShow()
+end
+
+
 -- Create the title
 local title = addonFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetPoint("TOP", 0, -16)
@@ -36,10 +51,10 @@ local animationOffset = 5
 
 -- Populate the leaderboard with data from the dkpTable
 local dkpTable = {
-    { name = "Player1", dkp = 100, nameText = nil },
-    { name = "Player2", dkp = 200, nameText = nil },
-    { name = "Player3", dkp = 150, nameText = nil },
-    -- Add more entries as needed
+    { name = "Dinkins", dkp = 300, nameText = nil },
+    { name = "Theban", dkp = 200, nameText = nil },
+    { name = "Pneucrusader", dkp = 150, nameText = nil },
+    -- !!!! This can be removed and referenced with the actual DKP table once this is all strung up !!!
 }
 
 local yOffset = 0
@@ -73,6 +88,10 @@ end
 -- Start the animation
 local originalY = {}
 local function StartAnimation()
+    for i, data in ipairs(dkpTable) do
+        originalY[i] = data.nameText:GetPoint(2)
+    end
+    
     addonFrame:SetScript("OnUpdate", function(self, elapsed)
         animationTimer = animationTimer + elapsed
         for i, data in ipairs(dkpTable) do
