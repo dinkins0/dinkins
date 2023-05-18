@@ -5,8 +5,12 @@ local addonFrame = CreateFrame("Frame", "DinkinsDKPAddonFrame", UIParent)
 addonFrame:SetSize(300, 400)
 addonFrame:SetPoint("CENTER")
 addonFrame:SetBackdrop({
-    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+      bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+      edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+      tile = true,
+      tileSize = 16,
+      edgeSize = 16,
+      insets = { left = 4, right = 4, top = 4, bottom = 4 },
 })
 addonFrame:SetBackdropColor(0, 0, 0, 0.8)
 addonFrame:SetMovable(true)
@@ -21,13 +25,13 @@ local soundFilePath = "Interface\\Addons\\DinkinsDKP\\questing.mp3"
 
 -- Function to play the sound
 local function PlaySoundOnShow()
-    PlaySoundFile(soundFilePath, "Master")
+   PlaySoundFile(soundFilePath, "Master")
 end
 
 -- Show the GUI
-function ShowGUI()
-    addonFrame:Show()
-    PlaySoundOnShow()
+local function ShowGUI()
+   addonFrame:Show()
+   PlaySoundOnShow()
 end
 
 
@@ -53,25 +57,25 @@ local animationOffset = 5
 
 -- Populate the leaderboard with data from the dkpTable
 local dkpTable = {
-    { name = "Dinkins", dkp = 300, nameText = nil },
-    { name = "Theban", dkp = 200, nameText = nil },
-    { name = "Pneucrusader", dkp = 150, nameText = nil },
-    -- !!!! This can be removed and referenced with the actual DKP table once this is all strung up !!!
+   { name = "Dinkins", dkp = 300, nameText = nil },
+   { name = "Theban", dkp = 200, nameText = nil },
+   { name = "Pneucrusader", dkp = 150, nameText = nil },
+   -- !!!! This can be removed and referenced with the actual DKP table once this is all strung up !!!
 }
 
 local yOffset = 0
 local rowHeight = 20
 for i, data in ipairs(dkpTable) do
-    local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    nameText:SetPoint("TOPLEFT", 8, -yOffset)
-    nameText:SetText(data.name)
-    data.nameText = nameText  -- Store the nameText in the data table
-
-    local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    dkpText:SetPoint("TOPRIGHT", -8, -yOffset)
-    dkpText:SetText(data.dkp)
-
-    yOffset = yOffset + rowHeight
+   local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+   nameText:SetPoint("TOPLEFT", 8, -yOffset)
+   nameText:SetText(data.name)
+   data.nameText = nameText  -- Store the nameText in the data table
+   
+   local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+   dkpText:SetPoint("TOPRIGHT", -8, -yOffset)
+   dkpText:SetText(data.dkp)
+   
+   yOffset = yOffset + rowHeight
 end
 
 scrollFrame:SetScrollChild(leaderboard)
@@ -90,22 +94,22 @@ scrollFrame:SetScrollChild(leaderboard)
 -- Start the animation
 local originalY = {}
 local function StartAnimation()
-    for i, data in ipairs(dkpTable) do
-        originalY[i] = data.nameText:GetPoint(2)
-    end
-    
-    addonFrame:SetScript("OnUpdate", function(self, elapsed)
-        animationTimer = animationTimer + elapsed
-        for i, data in ipairs(dkpTable) do
+   for i, data in ipairs(dkpTable) do
+      originalY[i] = data.nameText:GetPoint(2)
+   end
+   
+   addonFrame:SetScript("OnUpdate", function(self, elapsed)
+         animationTimer = animationTimer + elapsed
+         for i, data in ipairs(dkpTable) do
             local yOffset = originalY[i] + math.sin(animationTimer * animationSpeed) * animationOffset
             data.nameText:SetPoint("TOPLEFT", 8, -yOffset)
-        end
-    end)
+         end
+   end)
 end
 
 -- Stop the animation
 local function StopAnimation()
-    addonFrame:SetScript("OnUpdate", nil)
+   addonFrame:SetScript("OnUpdate", nil)
 end
 
 -- Hook the show/hide events to start/stop the animation
