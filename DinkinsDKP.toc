@@ -2,9 +2,10 @@
 ## Title: DinkinsDKP
 ## Author: Dinkins-Mal'Ganis
 ## Version: 1.0
+## SavedVariables: DinkinsDKPDB
+DinkinsDKP.lua
 Commands.lua
 Network.lua
 Table.lua
 Events.lua
 Utilities.lua
-DinkinsDKP.lua

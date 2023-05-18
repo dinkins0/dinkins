@@ -4,10 +4,6 @@ Events = {}
 -- Required Libraries
 local C_Timer = C_Timer
 
-function Events.initialize()
-
-end
-
 -- Dock DKP if someone outrolls Dinkins for Loot
 -- Register for the LOOT_ROLLS_COMPLETE event
 local frame = CreateFrame("Frame")
@@ -84,59 +80,6 @@ function Events.handleAddonLoaded(self, event, ...)
             end
         end
     end
-
-    -- Register slash command handler
-    SlashCmdList["DINKINSDKP"] = function(msg)
-        local command, target, amount = strsplit(" ", msg)
-        if command == "set" or command == "add" or command == "minus" then
-            Events.handleDKP(command, target, amount)
-        elseif command == "list" then
-            -- Sort the table
-            local sortedTable = Table.SortDKPTable()
-            -- Code for listing DKP
-            if strtrim(target) == "raid" then
-                SendChatMessage("Dinkins Kindness Points (DKP) List:", "RAID", nil, "")
-                for i, entry in ipairs(sortedTable) do
-                    local playerName = entry.name
-                    local playerDKP = entry.dkp
-
-                    C_Timer.After(i, function()
-                        SendChatMessage(playerName .. ": " .. playerDKP, "RAID", nil, "")
-                    end)
-                end
-            elseif strtrim(target) == "guild" then
-                SendChatMessage("Dinkins Kindness Points (DKP) List:", "GUILD", nil, "")
-                for i, entry in ipairs(sortedTable) do
-                    local playerName = entry.name
-                    local playerDKP = entry.dkp
-
-                    C_Timer.After(i, function()
-                        SendChatMessage(playerName .. ": " .. playerDKP, "guild", nil, "")
-                    end)
-                end
-            elseif strtrim(target) ~= nil then
-                SendChatMessage("Dinkins Kindness Points (DKP) List:", "WHISPER", nil, target)
-                for i, entry in ipairs(sortedTable) do
-                    local playerName = entry.name
-                    local playerDKP = entry.dkp
-
-                    C_Timer.After(i, function()
-                        SendChatMessage(playerName .. ": " .. playerDKP, "WHISPER", nil, target)
-                    end)
-                end
-            else
-                Network.SendChatMessageToChannel("Dinkins Kindness Points (DKP) List:", nil)
-                for i, entry in ipairs(sortedTable) do
-                    local playerName = entry.name
-                    local playerDKP = entry.dkp
-
-                    C_Timer.After(i, function()
-                        print(playerName .. ": " .. playerDKP)
-                    end)
-                end
-            end
-        end
-    end
 end
 
 -- Helper function
@@ -151,7 +94,7 @@ function Events.handleDKP(command, target, amount)
 
             Network.SendChatMessageToChannel("Your Dinkins Kindness Points (DKP) has been set to " .. amount, target)
         elseif command == "add" then
-            if not Table.exists(target) then
+            if Table.exists(target) == false then
                 Table.add(target, amount)
 
                 Network.SendChatMessageToChannel(
@@ -160,8 +103,9 @@ function Events.handleDKP(command, target, amount)
             else
                 Table.modifyByAdding(target, amount)
 
-                Network.SendChatMessageToChannel("DKP plus " .. amount .. ". You now have " .. Table.lookup(target) ..
-                                                     " Dinkins Kindness Points.", target)
+                Network.SendChatMessageToChannel("DKP plus " .. amount .. ". You now have " ..
+                                                     (Table.lookup(target) or "?") .. " Dinkins Kindness Points.",
+                    target)
             end
         elseif command == "minus" then
             if not Table.exists(target) then
@@ -173,8 +117,9 @@ function Events.handleDKP(command, target, amount)
             else
                 Table.modifyByAdding(target, -amount)
 
-                Network.SendChatMessageToChannel("DKP minus " .. amount .. ". You now have " .. Table.lookup(target) ..
-                                                     " Dinkins Kindness Points.", target)
+                Network.SendChatMessageToChannel("DKP minus " .. amount .. ". You now have " ..
+                                                     (Table.lookup(target) or "?") .. " Dinkins Kindness Points.",
+                    target)
             end
         end
     end
