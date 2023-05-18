@@ -7,6 +7,7 @@ local Network = Network
 local Table = Table
 local Events = Events
 local Utilities = Utilities
+local Gui = Gui
 
 -- Use the functions from the required files
 function DinkinsDKP:ADDON_LOADED(event, addon)
