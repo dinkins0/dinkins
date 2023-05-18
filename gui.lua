@@ -36,9 +36,9 @@ local animationOffset = 5
 
 -- Populate the leaderboard with data from the dkpTable
 local dkpTable = {
-    { name = "Player1", dkp = 100 },
-    { name = "Player2", dkp = 200 },
-    { name = "Player3", dkp = 150 },
+    { name = "Player1", dkp = 100, nameText = nil },
+    { name = "Player2", dkp = 200, nameText = nil },
+    { name = "Player3", dkp = 150, nameText = nil },
     -- Add more entries as needed
 }
 
@@ -48,18 +48,11 @@ for i, data in ipairs(dkpTable) do
     local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     nameText:SetPoint("TOPLEFT", 8, -yOffset)
     nameText:SetText(data.name)
+    data.nameText = nameText  -- Store the nameText in the data table
 
     local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     dkpText:SetPoint("TOPRIGHT", -8, -yOffset)
     dkpText:SetText(data.dkp)
-
-    -- Add animation to characters
-    local originalY = yOffset
-    nameText:SetScript("OnUpdate", function(self, elapsed)
-        animationTimer = animationTimer + elapsed
-        local yOffset = originalY + math.sin(animationTimer * animationSpeed) * animationOffset
-        self:SetPoint("TOPLEFT", 8, -yOffset)
-    end)
 
     yOffset = yOffset + rowHeight
 end
@@ -78,6 +71,7 @@ SlashCmdList["DKPGUI"] = function()
 end
 
 -- Start the animation
+local originalY = {}
 local function StartAnimation()
     addonFrame:SetScript("OnUpdate", function(self, elapsed)
         animationTimer = animationTimer + elapsed
