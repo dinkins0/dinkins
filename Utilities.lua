@@ -1,8 +1,6 @@
 -- Utilities.lua
-local util = {}
+Utilities = {}
 
-function util.initialize()
+function Utilities.initialize()
     -- Initialization code here
 end
-
-return util

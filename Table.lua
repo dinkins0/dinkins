@@ -1,11 +1,11 @@
 -- Table.lua
-local Table = {}
+Table = {}
+
+DinkinsDKPDB = DinkinsDKPDB or {}
 
 -- Initialize local table with either WoW Saved Variable or default
 function Table.initialize()
-    if DinkinsDKPDB == nil then
-        DinkinsDKPDB = {}
-    end
+
 end
 
 function Table.exists(playerName)
@@ -95,5 +95,3 @@ function Table.hackDinkinsDKP()
         dkpTable["Dinkins"] = maxDKP + 1
     end
 end
-
-return Table
