@@ -42,7 +42,7 @@ title:SetFont("Fonts\\ARIALN.TTF", 20, "OUTLINE")
 
 -- Create the image
 local image = addonFrame:CreateTexture(nil, "ARTWORK")
-image:SetTexture("Interface\\Addons\\DinkinsDKP\\your_image_file.png")
+image:SetTexture("Interface\\Addons\\DinkinsDKP\\dinkinsdkp.png")
 image:SetPoint("TOP", addonFrame, "TOP", 0, -50)
 image:SetSize(addonFrame:GetWidth() - 40, 100)
 
