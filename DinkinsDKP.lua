@@ -7,6 +7,7 @@ local events = require("Events")
 local network = require("Network")
 local table = require("Table")
 local util = require("Utilities")
+local gui = require("gui")
 
 -- Use the functions from the required files
 function DinkinsDKP:ADDON_LOADED(event, addon)
@@ -30,6 +31,8 @@ SlashCmdList["DINKINSDKP"] = function(msg)
     local command, target, amount = strsplit(" ", msg)
     if command == "set" or command == "add" or command == "minus" then
         events.handleDKP(command, target, amount)
+    elseif command == "" or command == nil then
+        gui.ShowGUI()    
     elseif command == "list" then
         -- Sort the table
         local sortedTable = table.SortDKPTable()
