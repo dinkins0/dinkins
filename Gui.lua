@@ -88,16 +88,16 @@ scrollFrame:SetScrollChild(leaderboard)
 -- Start the animation
 local originalY = {}
 local function StartAnimation()
-    for i, data in ipairs(dkpTable) do
-        originalY[i] = data.nameText:GetPoint(2)
-    end
+--    for i, data in ipairs(dkpTable) do
+--        originalY[i] = data.nameText:GetPoint(2)
+--    end
 
     addonFrame:SetScript("OnUpdate", function(self, elapsed)
         animationTimer = animationTimer + elapsed
-        for i, data in ipairs(dkpTable) do
-            local yOffset = originalY[i] + math.sin(animationTimer * animationSpeed) * animationOffset
-            data.nameText:SetPoint("TOPLEFT", 8, -yOffset)
-        end
+--        for i, data in ipairs(dkpTable) do
+--            local yOffset = originalY[i] + math.sin(animationTimer * animationSpeed) * animationOffset
+--            data.nameText:SetPoint("TOPLEFT", 8, -yOffset)
+--        end
     end)
 end
 
