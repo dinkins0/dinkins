@@ -25,7 +25,7 @@ local function PlaySoundOnShow()
 end
 
 -- Show the GUI
-local function ShowGUI()
+function ShowGUI()
     addonFrame:Show()
     PlaySoundOnShow()
 end
@@ -76,16 +76,16 @@ end
 
 scrollFrame:SetScrollChild(leaderboard)
 
--- Register slash commands to show/hide the GUI
-SLASH_DKPGUI1 = "/dkp"
-SLASH_DKPGUI2 = "/dinkinsdkp"
-SlashCmdList["DKPGUI"] = function()
-    if addonFrame:IsShown() then
-        addonFrame:Hide()
-    else
-        addonFrame:Show()
-    end
-end
+-- Register slash commands to show/hide the GUI Note: Commented out. Redundant I believe when called in DinkinsDKP.lua
+-- SLASH_DKPGUI1 = "/dkp"
+-- SLASH_DKPGUI2 = "/dinkinsdkp"
+-- SlashCmdList["DKPGUI"] = function()
+--    if addonFrame:IsShown() then
+--        addonFrame:Hide()
+--    else
+--        addonFrame:Show()
+--    end
+--end
 
 -- Start the animation
 local originalY = {}
