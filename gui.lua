@@ -5,8 +5,6 @@ addonFrame:SetPoint("CENTER")
 addonFrame:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
     edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-    tile = true, tileSize = 16, edgeSize = 16,
-    insets = { left = 4, right = 4, top = 4, bottom = 4 }
 })
 addonFrame:SetBackdropColor(0, 0, 0, 0.8)
 addonFrame:SetMovable(true)
@@ -35,6 +33,14 @@ leaderboard:SetSize(250, 300)
 local animationTimer = 0
 local animationSpeed = 2
 local animationOffset = 5
+
+-- Populate the leaderboard with data from the dkpTable
+local dkpTable = {
+    { name = "Player1", dkp = 100 },
+    { name = "Player2", dkp = 200 },
+    { name = "Player3", dkp = 150 },
+    -- Add more entries as needed
+}
 
 local yOffset = 0
 local rowHeight = 20
@@ -90,4 +96,3 @@ end
 -- Hook the show/hide events to start/stop the animation
 addonFrame:SetScript("OnShow", StartAnimation)
 addonFrame:SetScript("OnHide", StopAnimation)
-
