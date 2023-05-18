@@ -1,4 +1,6 @@
 -- Create the addon frame
+Gui = {}
+
 local addonFrame = CreateFrame("Frame", "DinkinsDKPAddonFrame", UIParent)
 addonFrame:SetSize(300, 400)
 addonFrame:SetPoint("CENTER")
