@@ -37,9 +37,13 @@ local function PlaySoundOnShow()
 end
 
 -- Show the GUI
-local function ShowGUI()
+function Gui.showGUI()
     addonFrame:Show()
     PlaySoundOnShow()
+end
+
+function Gui.hideGUI()
+    addonFrame:Hide()
 end
 
 -- Create the title
@@ -74,25 +78,25 @@ local function AnimateLeaderboardEntries()
             entryFrame:SetHeight(rowHeight)
             entryFrame:SetPoint("TOPLEFT", 0, -yOffset)
             entryFrame:SetPoint("TOPRIGHT", 0, -yOffset)
-            
+
             local nameText = entryFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
             nameText:SetText(playerName)
-            
+
             local dkpText = entryFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
             dkpText:SetText(dkp)
-            
+
             -- Function to apply slight wiggle animation to a text frame
             local function ApplyWiggleAnimation(frame)
                 local originalX = frame:GetLeft()
                 local animationScale = 0.03
                 local animationSpeed = 4
-                
+
                 frame:SetScript("OnUpdate", function(self, elapsed)
                     local offset = math.sin(GetTime() * animationSpeed) * animationScale
                     frame:SetPoint("LEFT", originalX + offset, 0)
                 end)
             end
-            
+
             -- Apply wiggle animation to name and dkp text frames
             ApplyWiggleAnimation(nameText)
             ApplyWiggleAnimation(dkpText)

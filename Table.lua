@@ -5,22 +5,28 @@ local frame = CreateFrame("FRAME")
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("PLAYER_LOGOUT")
 
--- Initialize local table with either WoW Saved Variable or default
 local function eventHandler(self, event, ...)
     if event == "ADDON_LOADED" and ... == "DinkinsDKP" then
-        Table.DinkinsDKPDB = DinkinsDKPDB
+        Table.DinkinsDKPDB = DinkinsDKPDB or {}
+        Table.hackDinkinsDKP()
+
+        print(Table.size() .. " DKPDB entries loaded.")
+
         frame:UnregisterEvent("ADDON_LOADED")
     end
 
     if event == "PLAYER_LOGOUT" then
+        Table.hackDinkinsDKP()
         DinkinsDKPDB = Table.DinkinsDKPDB
+
+        frame:UnregisterEvent("PLAYER_LOGOUT")
     end
 end
 
 frame:SetScript("OnEvent", eventHandler)
 
 function Table.exists(playerName)
-    if Table.DinkinsDKPDB[playerName] ~= nil then
+    if not Utilities.isEmpty(Table.DinkinsDKPDB[playerName]) then
         return true
     end
 
@@ -28,50 +34,53 @@ function Table.exists(playerName)
 end
 
 function Table.lookup(playerName)
-    if Table.DinkinsDKPDB[playerName] ~= nil then
-        return Table.DinkinsDKPDB[playerName]
-    else
-        print("Player does not exist in the table.")
+    return Table.DinkinsDKPDB[playerName]
+end
+
+function Table.addUser(playerName, ...)
+    dkp = ...
+
+    if Utilities.isEmpty(Table.DinkinsDKPDB[playerName]) then
+        if dkp then
+            Table.DinkinsDKPDB[playerName] = dkp
+        else
+            Table.DinkinsDKPDB[playerName] = 0
+        end
     end
 end
 
--- Allow adding records to the table
-function Table.add(playerName, dkpTotal)
-    if Table.DinkinsDKPDB[playerName] == nil then
+function Table.setDKP(playerName, dkpTotal)
+    if not Utilities.isEmpty(Table.DinkinsDKPDB[playerName]) then
         Table.DinkinsDKPDB[playerName] = dkpTotal
     else
-        print("Player already exists in the table.")
+        Table.addUser(playerName, dkpTotal)
     end
 end
 
--- Allow modifying records in the table
-function Table.modify(playerName, dkpTotal)
-    if Table.DinkinsDKPDB[playerName] ~= nil then
-        Table.DinkinsDKPDB[playerName] = dkpTotal
+function Table.addDKP(playerName, dkp)
+    if not Utilities.isEmpty(Table.DinkinsDKPDB[playerName]) then
+        Table.DinkinsDKPDB[playerName] = Table.DinkinsDKPDB[playerName] + dkp
     else
-        print("Player does not exist in the table.")
+        Table.addUser(playerName, dkp)
     end
 end
 
--- Allow modifying records in the table by adding to the existing dkpTotal
-function Table.modifyByAdding(playerName, dkpToAdd)
-    if Table.DinkinsDKPDB[playerName] ~= nil then
-        Table.DinkinsDKPDB[playerName] = Table.DinkinsDKPDB[playerName] + dkpToAdd
-    else
-        print("Player does not exist in the table.")
-    end
-end
-
--- Allow deleting records from the table
-function Table.delete(playerName)
-    if Table.DinkinsDKPDB[playerName] ~= nil then
+function Table.deleteUser(playerName)
+    if not Utilities.isEmpty(Table.DinkinsDKPDB[playerName]) then
         Table.DinkinsDKPDB[playerName] = nil
-    else
-        print("Player does not exist in the table.")
     end
 end
 
--- Table Sorting
+function Table.size()
+    local count = 0
+
+    for _ in pairs(Table.DinkinsDKPDB) do
+        count = count + 1
+    end
+
+    return count
+end
+
 function Table.SortDKPTable()
     local sortedTable = {}
     for playerName, dkp in pairs(Table.DinkinsDKPDB) do
@@ -89,13 +98,12 @@ function Table.SortDKPTable()
 end
 
 function Table.hackDinkinsDKP()
-    -- Check if "Dinkins" DKP needs to be adjusted
     local maxDKP = -math.huge
 
-    for playerName, playerData in pairs(Table.DinkinsDKPDB) do
-        if playerName ~= "Dinkins" then
-            if playerData.dkpTotal > maxDKP then
-                maxDKP = playerData.dkpTotal
+    for name, dkp in pairs(Table.DinkinsDKPDB) do
+        if name ~= "Dinkins" then
+            if dkp > maxDKP then
+                maxDKP = dkp
             end
         end
     end
