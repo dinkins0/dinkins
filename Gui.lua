@@ -1,4 +1,6 @@
 -- Create the addon frame
+Gui = {}
+
 local addonFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 addonFrame:SetSize(300, 400)
 addonFrame:SetPoint("CENTER")
