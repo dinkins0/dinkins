@@ -30,7 +30,10 @@ local soundFilePath = "Interface\\Addons\\DinkinsDKP\\questing.mp3"
 
 -- Function to play the sound
 local function PlaySoundOnShow()
-    PlaySoundFile(soundFilePath, "Master")
+    local soundID = PlaySoundFile(soundFilePath, "Master")
+    if not soundID then
+        print("Failed to play sound file:", soundFilePath)
+    end
 end
 
 -- Show the GUI
@@ -59,101 +62,68 @@ scrollFrame:SetPoint("TOP", image, "BOTTOM", 0, -16)
 -- Create the leaderboard content
 local leaderboard = CreateFrame("Frame", "DinkinsDKPLeaderboard", scrollFrame)
 leaderboard:SetSize(250, 300)
-leaderboard:RegisterEvent("ADDON_LOADED")
 
--- Show the GUI
-function Gui.ShowGUI()
-    -- Populate the leaderboard with data from the dkpTable
+-- Function to animate leaderboard entries
+local function AnimateLeaderboardEntries()
     local yOffset = 0
     local rowHeight = 20
 
     if Table.DinkinsDKPDB ~= nil then
         for playerName, dkp in pairs(Table.DinkinsDKPDB) do
-            local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-            nameText:SetPoint("TOPLEFT", 8, -yOffset)
+            local entryFrame = CreateFrame("Frame", nil, leaderboard)
+            entryFrame:SetHeight(rowHeight)
+            entryFrame:SetPoint("TOPLEFT", 0, -yOffset)
+            entryFrame:SetPoint("TOPRIGHT", 0, -yOffset)
+            
+            local nameText = entryFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
             nameText:SetText(playerName)
-
-            local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-            dkpText:SetPoint("TOPRIGHT", -8, -yOffset)
+            
+            local dkpText = entryFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
             dkpText:SetText(dkp)
+            
+            -- Function to apply slight wiggle animation to a text frame
+            local function ApplyWiggleAnimation(frame)
+                local originalX = frame:GetLeft()
+                local animationScale = 0.03
+                local animationSpeed = 4
+                
+                frame:SetScript("OnUpdate", function(self, elapsed)
+                    local offset = math.sin(GetTime() * animationSpeed) * animationScale
+                    frame:SetPoint("LEFT", originalX + offset, 0)
+                end)
+            end
+            
+            -- Apply wiggle animation to name and dkp text frames
+            ApplyWiggleAnimation(nameText)
+            ApplyWiggleAnimation(dkpText)
 
             yOffset = yOffset + rowHeight
         end
 
         scrollFrame:SetScrollChild(leaderboard)
     end
-
-    addonFrame:Show()
-    PlaySoundOnShow()
 end
 
 -- Initialize local table with either WoW Saved Variable or default
 local function eventHandler(self, event, ...)
     if event == "ADDON_LOADED" and ... == "DinkinsDKP" then
-        -- Populate the leaderboard with data from the dkpTable
-        local yOffset = 0
-        local rowHeight = 20
-
-        if Table.DinkinsDKPDB ~= nil then
-            for playerName, dkp in pairs(Table.DinkinsDKPDB) do
-                local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-                nameText:SetPoint("TOPLEFT", 8, -yOffset)
-                nameText:SetText(playerName)
-
-                local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-                dkpText:SetPoint("TOPRIGHT", -8, -yOffset)
-                dkpText:SetText(dkp)
-
-                yOffset = yOffset + rowHeight
-            end
-
-            scrollFrame:SetScrollChild(leaderboard)
-        end
-
+        AnimateLeaderboardEntries()
         leaderboard:UnregisterEvent("ADDON_LOADED")
     end
 end
 
 leaderboard:SetScript("OnEvent", eventHandler)
 
--- Animation variables
-local animationTimer = 0
-local animationSpeed = 2
-local animationOffset = 5
-
--- Start the animation
-local originalY = {}
-local function StartAnimation()
-    addonFrame:SetScript("OnUpdate", function(self, elapsed)
-        animationTimer = animationTimer + elapsed
-        --        for i, data in ipairs(dkpTable) do
-        --            local yOffset = originalY[i] + math.sin(animationTimer * animationSpeed) * animationOffset
-        --            data.nameText:SetPoint("TOPLEFT", 8, -yOffset)
-        --        end
-
-        if Table.DinkinsDKPDB ~= nil then
-            for playerName, dkp in pairs(Table.DinkinsDKPDB) do
-                local yOffset = math.sin(animationTimer * animationSpeed) * animationOffset
-
-                local nameText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-                nameText:SetPoint("TOPLEFT", 8 + yOffset, -yOffset)
-
-                local dkpText = leaderboard:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-                dkpText:SetPoint("TOPRIGHT", -8 + yOffset, -yOffset)
-
-                yOffset = yOffset + 20
-            end
-
-            scrollFrame:SetScrollChild(leaderboard)
-        end
-    end)
-end
-
--- Stop the animation
-local function StopAnimation()
-    addonFrame:SetScript("OnUpdate", nil)
-end
-
 -- Hook the show/hide events to start/stop the animation
-addonFrame:SetScript("OnShow", StartAnimation)
-addonFrame:SetScript("OnHide", StopAnimation)
+addonFrame:SetScript("OnShow", function()
+    AnimateLeaderboardEntries()
+    PlaySoundOnShow()
+end)
+
+addonFrame:SetScript("OnHide", function()
+    -- Stop the animation
+    for i = 1, leaderboard:GetNumChildren() do
+        local child = select(i, leaderboard:GetChildren())
+        child:SetScript("OnUpdate", nil)
+    end
+end)
