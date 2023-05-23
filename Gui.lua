@@ -50,11 +50,11 @@ end
 local title = addonFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetPoint("TOP", 0, -16)
 title:SetText("DINKINS KINDNESS POINTS!!!")
-title:SetFont("Fonts\\ARIALN.TTF", 20, "OUTLINE")
+title:SetFont("Interface\\Addons\\DinkinsDKP\\Fonts\\porky.TTF", 20, "OUTLINE")
 
 -- Create the image
 local image = addonFrame:CreateTexture(nil, "ARTWORK")
-image:SetTexture("Interface\\Addons\\DinkinsDKP\\dinkinsdkp.png")
+image:SetTexture("Interface\\Addons\\DinkinsDKP\\dinkinsdkp.jpg")
 image:SetPoint("TOP", addonFrame, "TOP", 0, -50)
 image:SetSize(addonFrame:GetWidth() - 40, 100)
 
