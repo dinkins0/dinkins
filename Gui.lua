@@ -1,6 +1,8 @@
--- Create the addon frame
 Gui = {}
 
+
+
+-- Create the addon frame
 local addonFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 addonFrame:SetSize(300, 400)
 addonFrame:SetPoint("CENTER")
@@ -25,6 +27,13 @@ addonFrame:SetScript("OnDragStart", addonFrame.StartMoving)
 addonFrame:SetScript("OnDragStop", addonFrame.StopMovingOrSizing)
 addonFrame:Hide()
 
+-- Create the image texture
+local imageTexture = UIParent:CreateTexture(nil, "BACKGROUND")
+imageTexture:SetTexture("Interface\\Addons\\DinkinsDKP\\dinkinsdkp_sq.blp")
+imageTexture:SetSize(addonFrame:GetWidth(),200)
+imageTexture:SetPoint("CENTER", addonFrame, 0, 300)
+imageTexture:Hide()
+
 -- Path to MP3 file
 local soundFilePath = "Interface\\Addons\\DinkinsDKP\\questing.mp3"
 
@@ -40,10 +49,12 @@ end
 function Gui.showGUI()
     addonFrame:Show()
     PlaySoundOnShow()
+    imageTexture:Show()
 end
 
 function Gui.hideGUI()
     addonFrame:Hide()
+    imageTexture:Hide()
 end
 
 -- Create the title
@@ -52,11 +63,11 @@ title:SetPoint("TOP", 0, -16)
 title:SetText("DINKINS KINDNESS POINTS!!!")
 title:SetFont("Interface\\Addons\\DinkinsDKP\\Fonts\\porky.TTF", 20, "OUTLINE")
 
--- Create the image
-local image = addonFrame:CreateTexture(nil, "ARTWORK")
-image:SetTexture("Interface\\Addons\\DinkinsDKP\\dinkinsdkp.jpg")
-image:SetPoint("TOP", addonFrame, "TOP", 0, -50)
-image:SetSize(addonFrame:GetWidth() - 40, 100)
+-- -- Create the image
+-- local image = addonFrame:CreateTexture(nil, "ARTWORK")
+-- image:SetTexture("Interface\\Addons\\DinkinsDKP\\dinkinsdkp_sq.blp")
+-- image:SetPoint("TOP", addonFrame, "TOP", 0, -50)
+-- image:SetSize(addonFrame:GetWidth() - 40, 100)
 
 -- Create the leaderboard scroll frame
 local scrollFrame = CreateFrame("ScrollFrame", "DinkinsDKPScrollFrame", addonFrame, "UIPanelScrollFrameTemplate")
@@ -72,8 +83,8 @@ local function AnimateLeaderboardEntries()
     local yOffset = 0
     local rowHeight = 20
 
-    if Table.DinkinsDKPDB ~= nil then
-        for playerName, dkp in pairs(Table.DinkinsDKPDB) do
+    if DinkinsDKPDB ~= nil then
+        for playerName, dkp in pairs(DinkinsDKPDB) do
             local entryFrame = CreateFrame("Frame", nil, leaderboard)
             entryFrame:SetHeight(rowHeight)
             entryFrame:SetPoint("TOPLEFT", 0, -yOffset)
