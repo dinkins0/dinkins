@@ -1,7 +1,5 @@
 Gui = {}
 
-
-
 -- Create the addon frame
 local addonFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 addonFrame:SetSize(300, 400)
@@ -28,9 +26,9 @@ addonFrame:SetScript("OnDragStop", addonFrame.StopMovingOrSizing)
 addonFrame:Hide()
 
 -- Create the image texture
-local imageTexture = UIParent:CreateTexture(nil, "BACKGROUND")
+local imageTexture = addonFrame:CreateTexture(nil, "BACKGROUND")
 imageTexture:SetTexture("Interface\\Addons\\DinkinsDKP\\dinkinsdkp_sq.blp")
-imageTexture:SetSize(addonFrame:GetWidth(),200)
+imageTexture:SetSize(addonFrame:GetWidth(), 200)
 imageTexture:SetPoint("CENTER", addonFrame, 0, 300)
 imageTexture:Hide()
 
@@ -63,16 +61,10 @@ title:SetPoint("TOP", 0, -16)
 title:SetText("DINKINS KINDNESS POINTS!!!")
 title:SetFont("Interface\\Addons\\DinkinsDKP\\Fonts\\porky.TTF", 20, "OUTLINE")
 
--- -- Create the image
--- local image = addonFrame:CreateTexture(nil, "ARTWORK")
--- image:SetTexture("Interface\\Addons\\DinkinsDKP\\dinkinsdkp_sq.blp")
--- image:SetPoint("TOP", addonFrame, "TOP", 0, -50)
--- image:SetSize(addonFrame:GetWidth() - 40, 100)
-
 -- Create the leaderboard scroll frame
 local scrollFrame = CreateFrame("ScrollFrame", "DinkinsDKPScrollFrame", addonFrame, "UIPanelScrollFrameTemplate")
 scrollFrame:SetSize(250, 300)
-scrollFrame:SetPoint("TOP", image, "BOTTOM", 0, -16)
+scrollFrame:SetPoint("TOP", title, "BOTTOM", 0, -16)
 
 -- Create the leaderboard content
 local leaderboard = CreateFrame("Frame", "DinkinsDKPLeaderboard", scrollFrame)
@@ -83,51 +75,46 @@ local function AnimateLeaderboardEntries()
     local yOffset = 0
     local rowHeight = 20
 
-    if DinkinsDKPDB ~= nil then
-        for playerName, dkp in pairs(DinkinsDKPDB) do
-            local entryFrame = CreateFrame("Frame", nil, leaderboard)
+    -- Clear the leaderboard before populating it
+    for i = 1, #leaderboard.entries do
+        leaderboard.entries[i]:Hide()
+    end
+
+    -- Populate the leaderboard with entries
+    local index = 1
+    for playerName, dkp in pairs(DinkinsDKPDB) do
+        local entryFrame = leaderboard.entries[index]
+        if not entryFrame then
+            entryFrame = CreateFrame("Frame", nil, leaderboard)
             entryFrame:SetHeight(rowHeight)
             entryFrame:SetPoint("TOPLEFT", 0, -yOffset)
             entryFrame:SetPoint("TOPRIGHT", 0, -yOffset)
 
             local nameText = entryFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-            nameText:SetText(playerName)
+            nameText:SetAllPoints(true)
 
             local dkpText = entryFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-            dkpText:SetText(dkp)
+            dkpText:SetAllPoints(true)
 
-            -- Function to apply slight wiggle animation to a text frame
-            local function ApplyWiggleAnimation(frame)
-                local originalX = frame:GetLeft()
-                local animationScale = 0.03
-                local animationSpeed = 4
+            entryFrame.nameText = nameText
+            entryFrame.dkpText = dkpText
 
-                frame:SetScript("OnUpdate", function(self, elapsed)
-                    local offset = math.sin(GetTime() * animationSpeed) * animationScale
-                    frame:SetPoint("LEFT", originalX + offset, 0)
-                end)
-            end
-
-            -- Apply wiggle animation to name and dkp text frames
-            ApplyWiggleAnimation(nameText)
-            ApplyWiggleAnimation(dkpText)
-
-            yOffset = yOffset + rowHeight
+            leaderboard.entries[index] = entryFrame
         end
 
-        scrollFrame:SetScrollChild(leaderboard)
+        entryFrame.nameText:SetText(playerName)
+        entryFrame.dkpText:SetText(dkp)
+        entryFrame:Show()
+
+        yOffset = yOffset + rowHeight
+        index = index + 1
     end
+
+    scrollFrame:SetScrollChild(leaderboard)
 end
 
--- Initialize local table with either WoW Saved Variable or default
-local function eventHandler(self, event, ...)
-    if event == "ADDON_LOADED" and ... == "DinkinsDKP" then
-        AnimateLeaderboardEntries()
-        leaderboard:UnregisterEvent("ADDON_LOADED")
-    end
-end
-
-leaderboard:SetScript("OnEvent", eventHandler)
+-- Initialize the leaderboard entries table
+leaderboard.entries = {}
 
 -- Hook the show/hide events to start/stop the animation
 addonFrame:SetScript("OnShow", function()
@@ -137,8 +124,7 @@ end)
 
 addonFrame:SetScript("OnHide", function()
     -- Stop the animation
-    for i = 1, leaderboard:GetNumChildren() do
-        local child = select(i, leaderboard:GetChildren())
-        child:SetScript("OnUpdate", nil)
+    for i = 1, #leaderboard.entries do
+        leaderboard.entries[i]:Hide()
     end
 end)
