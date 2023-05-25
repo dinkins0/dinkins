@@ -91,10 +91,12 @@ local function AnimateLeaderboardEntries()
             entryFrame:SetPoint("TOPRIGHT", 0, -yOffset)
 
             local nameText = entryFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-            nameText:SetAllPoints(true)
+            nameText:SetPoint("LEFT", 0, 0) -- Adjust the anchor point of the name text
+            nameText:SetPoint("RIGHT", entryFrame, "CENTER", -5, 0) -- Adjust the anchor point of the name text
 
             local dkpText = entryFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-            dkpText:SetAllPoints(true)
+            dkpText:SetPoint("LEFT", entryFrame, "CENTER", 5, 0) -- Adjust the anchor point of the DKP text
+            dkpText:SetPoint("RIGHT", 0, 0) -- Adjust the anchor point of the DKP text
 
             entryFrame.nameText = nameText
             entryFrame.dkpText = dkpText
