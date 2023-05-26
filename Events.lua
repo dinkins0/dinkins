@@ -44,14 +44,14 @@ frame:SetScript("OnEvent", eventHandler)
 function Events.handleAddonLoaded(self, event, ...)
     local player = UnitName("player")
 
-    if player ~= "Dinkins" or player ~= "Theban" then
-        -- print(
-        -- "Imposter detected! You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
-        -- SendChatMessage(
-        -- "I tried to load the Dinkins Kindness Points addon for myself, but I am an imposter. I eat boogers. Please help me delete my character.",
-        -- "GUILD", nil, nil)
-        -- SendChatMessage("!minus dkp 1000", "WHISPER", nil, "Dinkins")
-    end
+    -- if player ~= "Dinkins" or player ~= "Theban" then
+    --     -- print(
+    --     -- "Imposter detected! You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
+    --     -- SendChatMessage(
+    --     -- "I tried to load the Dinkins Kindness Points addon for myself, but I am an imposter. I eat boogers. Please help me delete my character.",
+    --     -- "GUILD", nil, nil)
+    --     -- SendChatMessage("!minus dkp 1000", "WHISPER", nil, "Dinkins")
+    -- end
 end
 
 function Events.handleWhisper(self, event, ...)
