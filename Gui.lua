@@ -80,9 +80,15 @@ local function AnimateLeaderboardEntries()
         leaderboard.entries[i]:Hide()
     end
 
+    -- Get the sorted and merged DKP table
+    local dkpTable = Table.SortDKPTable()
+
     -- Populate the leaderboard with entries
     local index = 1
-    for playerName, dkp in pairs(DinkinsDKPDB) do
+    for _, data in ipairs(dkpTable) do
+        local playerName = data.name
+        local dkp = data.dkp
+
         local entryFrame = leaderboard.entries[index]
         if not entryFrame then
             entryFrame = CreateFrame("Frame", nil, leaderboard)
@@ -114,6 +120,7 @@ local function AnimateLeaderboardEntries()
 
     scrollFrame:SetScrollChild(leaderboard)
 end
+
 
 -- Initialize the leaderboard entries table
 leaderboard.entries = {}
