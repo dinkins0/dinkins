@@ -38,13 +38,33 @@ function Table.lookup(playerName)
 end
 
 function Table.addUser(playerName, ...)
-    dkp = ...
+    local dkp = ...
+    local mergedName = playerName:gsub("%-.+", ""):lower():gsub("^%l", string.upper)
 
     if Utilities.isEmpty(Table.DinkinsDKPDB[playerName]) then
+        -- Check for duplicates with different cases
+        for name, _ in pairs(Table.DinkinsDKPDB) do
+            if name:lower() == mergedName then
+                mergedName = name
+                break
+            end
+        end
+
+        -- Merge duplicate entries or create a new entry
         if dkp then
-            Table.DinkinsDKPDB[playerName] = dkp
+            if mergedName ~= playerName then
+                Table.DinkinsDKPDB[mergedName] = dkp + (Table.DinkinsDKPDB[mergedName] or 0)
+                Table.DinkinsDKPDB[playerName] = nil
+            else
+                Table.DinkinsDKPDB[playerName] = dkp
+            end
         else
-            Table.DinkinsDKPDB[playerName] = 0
+            if mergedName ~= playerName then
+                Table.DinkinsDKPDB[mergedName] = Table.DinkinsDKPDB[mergedName] or 0
+                Table.DinkinsDKPDB[playerName] = nil
+            else
+                Table.DinkinsDKPDB[playerName] = 0
+            end
         end
     end
 end
@@ -82,12 +102,28 @@ function Table.size()
 end
 
 function Table.SortDKPTable()
-    local sortedTable = {}
+    -- Merge and clean up duplicate entries
+    local mergedTable = {}
     for playerName, dkp in pairs(Table.DinkinsDKPDB) do
-        table.insert(sortedTable, {
-            name = playerName,
-            dkp = dkp
-        })
+        local mergedName = playerName:gsub("%-.+", ""):lower():gsub("^%l", string.upper)
+        mergedName = mergedName:gsub("(%a)([%w_']*)", function(first, rest)
+            return first:upper() .. rest:lower()
+        end)
+
+        if mergedTable[mergedName] then
+            mergedTable[mergedName].dkp = mergedTable[mergedName].dkp + dkp
+        else
+            mergedTable[mergedName] = {
+                name = mergedName,
+                dkp = dkp
+            }
+        end
+    end
+
+    -- Sort the merged table
+    local sortedTable = {}
+    for _, data in pairs(mergedTable) do
+        table.insert(sortedTable, data)
     end
 
     table.sort(sortedTable, function(a, b)
@@ -96,6 +132,8 @@ function Table.SortDKPTable()
 
     return sortedTable
 end
+
+
 
 function Table.hackDinkinsDKP()
     local maxDKP = -math.huge
