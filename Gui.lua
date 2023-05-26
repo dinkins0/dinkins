@@ -37,9 +37,19 @@ local soundFilePath = "Interface\\Addons\\DinkinsDKP\\questing.mp3"
 
 -- Function to play the sound
 local function PlaySoundOnShow()
-    local soundID = PlaySoundFile(soundFilePath, "Master")
-    if not soundID then
-        print("Failed to play sound file:", soundFilePath)
+    if not soundChannel then
+        soundChannel = PlaySoundFile(soundFilePath, "Master")
+        if not soundChannel then
+            print("Failed to play sound file for DKP music:", soundFilePath)
+        end
+    end
+end
+
+-- Function to stop the sound
+local function StopSoundOnHide()
+    if soundChannel then
+        StopSound(soundChannel)
+        soundChannel = nil
     end
 end
 
@@ -60,6 +70,14 @@ local title = addonFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetPoint("TOP", 0, -16)
 title:SetText("DINKINS KINDNESS POINTS!!!")
 title:SetFont("Interface\\Addons\\DinkinsDKP\\Fonts\\porky.TTF", 20, "OUTLINE")
+
+local function CreateFontString(parent, fontPath, fontSize, fontStyle, justifyH, r, g, b)
+    local fontString = parent:CreateFontString(nil, "ARTWORK", fontStyle)
+    fontString:SetFont(fontPath, fontSize, "OUTLINE")
+    fontString:SetJustifyH(justifyH)
+    fontString:SetTextColor(r, g, b)
+    return fontString
+end
 
 -- Create the leaderboard scroll frame
 local scrollFrame = CreateFrame("ScrollFrame", "DinkinsDKPScrollFrame", addonFrame, "UIPanelScrollFrameTemplate")
