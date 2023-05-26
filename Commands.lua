@@ -109,6 +109,9 @@ SlashCmdList["DINKINSDKP"] = function(msg)
         ["minus"] = function()
             Commands.handleDKP(command, target, amount)
         end,
+        ["delete"] = function()
+            Commands.handleDKP(command, target)
+        end,
         ["list"] = function()
             Network.outputToChat(target, Table.SortDKPTable())
         end
