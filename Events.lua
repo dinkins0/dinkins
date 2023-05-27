@@ -9,6 +9,7 @@ local C_Timer = C_Timer
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("LOOT_ROLLS_COMPLETE")
+frame:RegisterEvent("CHAT_MSG_WHISPER")
 
 -- Use the functions from the required files
 local function eventHandler(self, event, ...)
@@ -44,36 +45,32 @@ frame:SetScript("OnEvent", eventHandler)
 function Events.handleAddonLoaded(self, event, ...)
     local player = UnitName("player")
 
-    if player ~= "Dinkins" or player ~= "Theban" then
-        -- print(
-        -- "Imposter detected! You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
-        -- SendChatMessage(
-        -- "I tried to load the Dinkins Kindness Points addon for myself, but I am an imposter. I eat boogers. Please help me delete my character.",
-        -- "GUILD", nil, nil)
-        -- SendChatMessage("!minus dkp 1000", "WHISPER", nil, "Dinkins")
-    end
+    -- if player ~= "Dinkins" or player ~= "Theban" then
+    --     -- print(
+    --     -- "Imposter detected! You are not authorized to use this addon because you are not Dinkins. Please delete your WoW character.")
+    --     -- SendChatMessage(
+    --     -- "I tried to load the Dinkins Kindness Points addon for myself, but I am an imposter. I eat boogers. Please help me delete my character.",
+    --     -- "GUILD", nil, nil)
+    --     -- SendChatMessage("!minus dkp 1000", "WHISPER", nil, "Dinkins")
+    -- end
 end
 
-function Events.handleWhisper(self, event, ...)
-    local message = string.lower(arg1)
-    local sender = arg2
+function Events.handleWhisper(self, event, arg1, arg2, arg3)
+    if event == "CHAT_MSG_WHISPER" then
+        local message = string.lower(arg1)
+        local sender = arg2:gsub("%-.+", ""):lower():gsub("^%l", string.upper)
 
-    if message == "!dkp" then
-        if not Table.exists(sender) then
-            Table.addUser(sender, -10)
+        if message == "!dkp" then
+       
+            if not Table.exists(sender) then
+                Table.addDKP(sender, -10)
 
-            SendChatMessage(
-                "You had no DKP. DKP minus 10 for asking without yet having any Dinkins Kindness Points. You now have -10 DKP.",
-                "WHISPER", nil, sender)
-        else
-            SendChatMessage("Your current DKP: " .. Table.lookup(sender), "WHISPER", nil, sender)
-        end
-    elseif message == "!minus dkp 1000" then
-        if Table.exists(sender) then
-            Table.addDKP(sender, -1000)
-
-            SendChatMessageToChannel("DKP minus 1,000. You now have " .. Table.lookup(sender) ..
-                                         " Dinkins Kindness Points.", sender)
+                SendChatMessage(
+                    "You had no DKP. DKP minus 10 for asking without yet having any Dinkins Kindness Points. You now have -10 DKP.",
+                    "WHISPER", nil, sender)
+            else
+                SendChatMessage("Your current DKP: " .. Table.lookup(sender), "WHISPER", nil, sender)
+            end
         end
     end
 end

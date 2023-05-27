@@ -5,6 +5,29 @@ local frame = CreateFrame("FRAME")
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("PLAYER_LOGOUT")
 
+function Table.getTableUpdateMessage()
+    -- Construct the message with the updated table data
+    local message = "TABLE_UPDATE:" -- Prefix to indicate table update
+    for playerName, dkp in pairs(DinkinsDKPDB) do
+        message = message .. playerName .. "=" .. dkp .. ";"
+    end
+    return message
+end
+
+function Table.processTableUpdate(message)
+    local prefix = "TABLE_UPDATE:" -- Prefix to identify table update messages
+    if strsub(message, 1, #prefix) == prefix then
+        -- Extract the updated table data from the message
+        local tableData = strsub(message, #prefix + 1)
+
+        -- Update the local table with the received data
+        for entry in gmatch(tableData, "([^;]+)") do
+            local playerName, dkp = strsplit("=", entry)
+            DinkinsDKPDB[playerName] = tonumber(dkp)
+        end
+    end
+end
+
 local function eventHandler(self, event, ...)
     if event == "ADDON_LOADED" and ... == "DinkinsDKP" then
         Table.DinkinsDKPDB = DinkinsDKPDB or {}
@@ -72,14 +95,17 @@ end
 function Table.setDKP(playerName, dkpTotal)
     if not Utilities.isEmpty(Table.DinkinsDKPDB[playerName]) then
         Table.DinkinsDKPDB[playerName] = dkpTotal
+        Table.SortDKPTable()
     else
         Table.addUser(playerName, dkpTotal)
+        Table.SortDKPTable()
     end
 end
 
 function Table.addDKP(playerName, dkp)
     if not Utilities.isEmpty(Table.DinkinsDKPDB[playerName]) then
         Table.DinkinsDKPDB[playerName] = Table.DinkinsDKPDB[playerName] + dkp
+        Table.SortDKPTable()
     else
         Table.addUser(playerName, dkp)
     end
@@ -129,8 +155,9 @@ function Table.SortDKPTable()
     table.sort(sortedTable, function(a, b)
         return a.dkp > b.dkp
     end)
-
+    DinkinsDKPDB = sortedTable
     return sortedTable
+    
 end
 
 
