@@ -55,30 +55,6 @@ function Events.handleAddonLoaded(self, event, ...)
     -- end
 end
 
--- -- Event handling function
---     local function OnEvent(self, event, ...)
---         local arg1, arg2, arg3 = ...
-    
---         if event == "CHAT_MSG_WHISPER" then
---             local message = string.lower(arg1)
---             local sender = arg2
-    
---             if message == "!dkp" then
---                 if dkpTable[sender] == nil then
---                     dkpTable[sender] = -10
---                     SendChatMessageToChannel("You had no DKP. DKP minus 10 for asking without yet having any Dinkins Kindness Points. You now have -10 DKP.", sender)
---                 else
---                     local dkp = dkpTable[sender]
---                     SendChatMessageToChannel("Your current DKP: " .. dkp, sender)
---                 end
---             elseif message == "!minus dkp 1000" then
---                 if dkpTable[sender] ~= nil then
---                     dkpTable[sender] = dkpTable[sender] - 1000
---                     SendChatMessageToChannel("DKP minus 1,000. You now have " .. dkpTable[sender] .. " Dinkins Kindness Points.", sender)
---                 end
---             end
-
-
 function Events.handleWhisper(self, event, arg1, arg2, arg3)
     if event == "CHAT_MSG_WHISPER" then
         local message = string.lower(arg1)
