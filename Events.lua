@@ -54,9 +54,9 @@ function Events.handleAddonLoaded(self, event, ...)
     -- end
 end
 
-function Events.handleWhisper(self, event, ...)
+function Events.handleWhisper(self, event, message, sender)
     local message = string.lower(arg1)
-    local sender = arg2
+    local sender = arg2:gsub("%-.+", ""):lower():gsub("^%l", string.upper)
 
     if message == "!dkp" then
         if not Table.exists(sender) then
