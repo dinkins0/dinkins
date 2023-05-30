@@ -78,6 +78,25 @@ function Commands.handleDKP(command, target, amount)
                     end                     
                 end
                 Network.SendChatMessageToChannel("DINKINS DKP ALERT! All raid members have been AWARDED: " .. amount .. " dkp!! To see your dkp, whisper Dinkins !dkp", "raid")
+                
+            elseif target == "Party" then
+                -- Iterate through online players in the party
+                for i = 1, GetNumGroupMembers() do
+                    local name, _, _, _, _, _, _, online = GetRaidRosterInfo(i)
+                    if online then
+                        -- Perform the desired action on each online player
+                        -- You can replace the example action with your custom logic
+                        -- For example, you can add DKP to each player
+                        -- Table.addDKP(name, amount)
+                        if not Table.exists(name) then
+                            Table.addUser(name, amount)
+                        else
+                            Table.addDKP(name, amount)
+                        end
+                    end                     
+                end
+                Network.SendChatMessageToChannel("DINKINS DKP ALERT! All party members have been AWARDED: " .. amount .. " dkp!! To see your dkp, whisper Dinkins !dkp", 
+                "party")
 
             elseif target == "Guild" then
                 -- Iterate through online players in the player's guild
@@ -94,7 +113,8 @@ function Commands.handleDKP(command, target, amount)
                         end
                     end
                 end
-                Network.SendChatMessageToChannel("DINKINS DKP ALERT! All online Goon Squad members have been added: " .. amount .. " dkp! To see your dkp, whisper Dinkins !dkp", "guild")
+                Network.SendChatMessageToChannel("DINKINS DKP ALERT! All online Goon Squad members have been added: " .. amount .. " dkp! To see your dkp, whisper Dinkins !dkp", 
+                "guild")
 
             else
                 if not Table.exists(target) then
@@ -127,7 +147,19 @@ function Commands.handleDKP(command, target, amount)
                 end
                 Network.SendChatMessageToChannel("DINKINS DKP ALERT! All raid members have been MINUSED: " .. amount .. " dkp!! To see your dkp, whisper Dinkins !dkp", 
                 "raid")
-
+            elseif target == "Party" then
+            -- Iterate through online players in the party
+                for i = 1, GetNumGroupMembers() do
+                    local name, _, _, _, _, _, _, online = GetRaidRosterInfo(i)
+                    if online then
+                        -- Perform the desired action on each online player
+                        -- You can replace the example action with your custom logic
+                        -- For example, you can subtract DKP from each player
+                        Table.addDKP(name, -amount)
+                    end
+                end
+                Network.SendChatMessageToChannel("DINKINS DKP ALERT! All party members have been MINUSED: " .. amount .. " dkp!! To see your dkp, whisper Dinkins !dkp", 
+                "party")
             elseif target == "Guild" then
                 -- Iterate through online players in the player's guild
                 for i = 1, GetNumGuildMembers() do
