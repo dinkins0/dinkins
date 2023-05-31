@@ -13,8 +13,10 @@ end
 frame:SetScript("OnEvent", eventHandler)
 
 local function outputRecord(target, player, dkp)
-    if target == "guild" or target == "raid" then
-        SendChatMessage(player .. ": " .. dkp, target.upper(), nil, "")
+    if target ==  "raid" then
+        SendChatMessage(player .. ": " .. dkp, "RAID", nil, "")
+    elseif target == "guild" then
+        SendChatMessage(player .. ": " .. dkp, "GUILD", nil, "")
     elseif target ~= nil then
         SendChatMessage(player .. ": " .. dkp, "WHISPER", nil, target)
     else
@@ -23,8 +25,10 @@ local function outputRecord(target, player, dkp)
 end
 
 local function outputHeader(target)
-    if target == "guild" or target == "raid" then
-        SendChatMessage("Dinkins Kindness Points (DKP) List:", target.upper(), nil, "")
+    if target == "raid" then
+        SendChatMessage("Dinkins Kindness Points (DKP) List:", "RAID", nil, "")
+    elseif target == "guild" then
+        SendChatMessage("Dinkins Kindness Points (DKP) List:", "GUILD", nil, "")    
     elseif target ~= nil then
         SendChatMessage("Dinkins Kindness Points (DKP) List:", "WHISPER", nil, target)
     else
@@ -39,6 +43,8 @@ function Network.SendChatMessageToChannel(message, target)
             SendChatMessage(message, "RAID", nil, nil)
         elseif target == "guild" then
             SendChatMessage(message, "GUILD", nil, nil)
+        elseif target == "party" then
+            SendChatMessage(message, "PARTY", nil, nil)
         else
             SendChatMessage(message, "WHISPER", nil, target)
         end
